@@ -1,0 +1,21 @@
+{
+  "name": "CollegePortal-mcchzb.in_backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/amanrajrana/markham_college_of_commerce-server.git",
+  "author": "Aman Raj Rana",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^7.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  }
+}
