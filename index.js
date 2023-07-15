@@ -11,8 +11,10 @@ app.use(cors());
 
 //Routes Import
 const studentRouter = require("./routes/student");
+const commonRouter = require("./routes/common");
 
 app.use("/student", studentRouter);
+app.use("/", commonRouter);
 
 app.get("*", (req, res) => {
   res.status(404).send({

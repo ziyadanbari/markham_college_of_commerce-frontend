@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const Student = require("../../model/student");
 const { createJwtToken } = require("../../auth/jwtToken");
+const { setOtp, verifyOtp } = require("../../services/otp");
 
 const handleStudentSignup = async (req, res) => {
   // Checking, Every Details is Valid or Not
@@ -8,7 +9,6 @@ const handleStudentSignup = async (req, res) => {
 
   // If Not Valid, Then Send Error
   if (!isEveryDetailsValid.isEmpty()) {
-    console.log("something is wrong here");
     return res.status(400).json({
       success: false,
       message: isEveryDetailsValid.array()[0].msg,
@@ -33,8 +33,8 @@ const handleStudentSignup = async (req, res) => {
       });
     }
 
-    // Creating a new Student
-    const newStudent = await Student.create({
+    // If Student is not registered, Then Send otp
+    const { sessionId, otp } = setOtp({
       firstName,
       lastName,
       email,
@@ -43,18 +43,68 @@ const handleStudentSignup = async (req, res) => {
       program,
     });
 
-    const payload = {
-      ...newStudent._doc,
-      password: "",
-    };
-    const jwtToken = createJwtToken(payload);
+    console.log("otp is: ", otp);
 
     // Sending the response
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
-      message: "Student Signup",
-      Student: payload,
-      jwtToken,
+      message: "OTP send on your email",
+      sessionId: sessionId,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+const handleStudentSignupOtpVerify = async (req, res) => {
+  // Checking, Every Details is Valid or Not
+  const isEveryDetailsValid = validationResult(req);
+
+  // If Not Valid, Then Send Error
+  if (!isEveryDetailsValid.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      message: isEveryDetailsValid.array()[0].msg,
+    });
+  }
+
+  const sessionId = req.headers.sessionid;
+  const { otp } = req.body;
+
+  try {
+    // Verifying the otp
+    const { success, message, userData } = await verifyOtp(sessionId, otp);
+
+    // If otp is not verified, Then Send Error
+    if (!success) {
+      return res.status(401).json({
+        success: false,
+        message: message,
+      });
+    }
+
+    // If otp is verified, Then Create a new Student
+    const newStudent = new Student(userData);
+
+    // Saving the new Student
+    await newStudent.save();
+
+    // Creating a new jwt token
+    const jwtToken = createJwtToken({
+      id: newStudent._id,
+      email: newStudent.email,
+      name: newStudent.firstName + " " + newStudent.lastName,
+      role: "student",
+    });
+
+    // Sending the response
+    return res.status(200).json({
+      success: true,
+      message: "Student created successfully",
+      authorization: jwtToken,
     });
   } catch (error) {
     return res.status(500).json({
@@ -66,4 +116,5 @@ const handleStudentSignup = async (req, res) => {
 
 module.exports = {
   handleStudentSignup,
+  handleStudentSignupOtpVerify,
 };
