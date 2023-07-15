@@ -36,6 +36,7 @@ const getOtp = (sessionId) => {
   return {
     success: true,
     otp: savedData.otp,
+    email: savedData.data.email,
   };
 };
 

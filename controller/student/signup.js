@@ -2,6 +2,10 @@ const { validationResult } = require("express-validator");
 const Student = require("../../model/student");
 const { createJwtToken } = require("../../auth/jwtToken");
 const { setOtp, verifyOtp } = require("../../services/otp");
+const { sendMail } = require("../../services/email/emailSend");
+const {
+  otpEmailTemplate,
+} = require("../../services/email/emailHtmlTemplates/otpEmailTemplate");
 
 const handleStudentSignup = async (req, res) => {
   // Checking, Every Details is Valid or Not
@@ -43,7 +47,31 @@ const handleStudentSignup = async (req, res) => {
       program,
     });
 
-    console.log("otp is: ", otp);
+    /**
+     * Send otp on email
+     */
+
+    // Importing email template
+    const { html, text } = otpEmailTemplate(otp);
+
+    let mailPayload = {
+      sender: `Markham College of commerce`,
+      receiversEmail: email,
+      subject: `Registration OTP is ${otp}`,
+      messageText: text,
+      messageHtml: html,
+    };
+
+    // Send email
+    const send = await sendMail(mailPayload);
+
+    // Check if email sending was successful
+    if (!send.success) {
+      return res.status(500).send({
+        success: false,
+        message: "Unable to send opt",
+      });
+    }
 
     // Sending the response
     return res.status(200).json({
