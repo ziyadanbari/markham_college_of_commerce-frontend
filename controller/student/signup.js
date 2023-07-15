@@ -47,9 +47,9 @@ const handleStudentSignup = async (req, res) => {
       program,
     });
 
-    /**
-     * Send otp on email
-     */
+    // /**
+    //  * Send otp on email
+    //  */
 
     // Importing email template
     const { html, text } = otpEmailTemplate(otp);

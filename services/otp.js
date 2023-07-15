@@ -7,7 +7,11 @@ const generateOTP = () => {
   return Math.floor(10000 + Math.random() * 90000);
 };
 
-// Set otp in map with userData
+/**
+ * @param {Object} userData - user data object
+ * @returns {Object} - success, sessionId and otp
+ *
+ */
 const setOtp = (userData) => {
   const time = new Date(); // current time
   const otp = generateOTP(); // generate otp
@@ -25,6 +29,10 @@ const setOtp = (userData) => {
   return { sessionId, otp };
 };
 
+/**
+ * @param {String} sessionId - which is return from setOtp function
+ * @returns {Object} - success, otp and email
+ */
 const getOtp = (sessionId) => {
   const savedData = mapData.get(sessionId);
   if (!savedData) {
@@ -94,7 +102,7 @@ const verifyOtp = async (sessionId, userOtp) => {
 };
 
 module.exports = {
-  setOtp,
-  getOtp,
-  verifyOtp,
+  setOtp, // This function is used to set otp in map and return sessionId and otp
+  getOtp, // This function is used to get otp from map with the help of sessionId use in resend otp
+  verifyOtp, // This function is used to verify otp with the help of sessionId and otp
 };
