@@ -5,6 +5,7 @@ const {
   handleStudentSignup,
   handleStudentSignupOtpVerify,
 } = require("../controller/student/signup");
+const { handleStudentSignIn } = require("../controller/student/sign");
 const router = express.Router();
 
 // ROUTER: POST /student/signup
@@ -39,6 +40,16 @@ router.post(
     header("sessionId").notEmpty().withMessage("Session ID is required"),
   ],
   handleStudentSignupOtpVerify
+);
+
+// ROUTER: POST /student/signin
+router.post(
+  "signin",
+  [
+    body("email").isEmail().withMessage("Please enter a valid email address"),
+    body("password").isLength({ min: 8 }).withMessage("Invalid password"),
+  ],
+  handleStudentSignIn
 );
 
 // Importing the router

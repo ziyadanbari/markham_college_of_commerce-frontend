@@ -38,7 +38,7 @@ const getOtp = (sessionId) => {
   if (!savedData) {
     return {
       success: false,
-      message: "Unable to verify, please go back and try and again",
+      message: "Cannot send OTP, please go back and try and again",
     };
   }
   return {
@@ -57,9 +57,6 @@ const getOtp = (sessionId) => {
 const verifyOtp = async (sessionId, userOtp) => {
   const savedData = mapData.get(sessionId);
 
-  const time = new Date();
-  const timeNow = time.getTime();
-
   // if sessionId Not found in map
   if (!savedData) {
     return {
@@ -67,6 +64,9 @@ const verifyOtp = async (sessionId, userOtp) => {
       message: "Unable to verify, please go back and try and again",
     };
   }
+
+  const time = new Date();
+  const timeNow = time.getTime();
 
   if (timeNow > savedData.otpExp) {
     mapData.delete(sessionId);
