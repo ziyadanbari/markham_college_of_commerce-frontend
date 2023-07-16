@@ -3,6 +3,7 @@ const Student = require("../../model/student");
 const { createJwtToken } = require("../../auth/jwtToken");
 const { setOtp, verifyOtp } = require("../../services/otp");
 const { sendMail } = require("../../services/email/emailSend");
+const bcrypt = require("bcrypt");
 const {
   otpEmailTemplate,
 } = require("../../services/email/emailHtmlTemplates/otpEmailTemplate");
@@ -37,12 +38,15 @@ const handleStudentSignup = async (req, res) => {
       });
     }
 
+    // Hash password
+    const hashPassword = await bcrypt.hash(password, 10);
+
     // If Student is not registered, Then Send otp
     const { sessionId, otp } = setOtp({
       firstName,
       lastName,
       email,
-      password,
+      password: hashPassword,
       phoneNumber,
       program,
     });

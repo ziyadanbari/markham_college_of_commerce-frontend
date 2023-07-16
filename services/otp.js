@@ -19,7 +19,7 @@ const setOtp = (userData) => {
 
   //if NODE_ENV is not production then log opt in console
   if (process.env.NODE_ENV !== "production") {
-    console.log(otp);
+    console.log(`otp: ${otp}`);
   }
 
   // map option with userData, otp, otpExpireTime, attempt

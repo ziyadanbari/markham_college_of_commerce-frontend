@@ -33,6 +33,11 @@ const MONGODB_URI =
 
 const startServer = async () => {
   try {
+    // Check NODE_ENV
+    if (process.env.NODE_ENV !== "production") {
+      console.log("NODE_ENV is not production");
+    }
+
     await connectDB(MONGODB_URI);
     console.log("mongodb connected");
     app.listen(PORT, () => {
