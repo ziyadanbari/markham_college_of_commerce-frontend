@@ -1,6 +1,8 @@
 const { validationResult } = require("express-validator");
 const { getOtp } = require("../../services/otp");
-const { otpEmailTemplate } = require("../../services/email/emailHtmlTemplates/otpEmailTemplate");
+const {
+  otpEmailTemplate,
+} = require("../../services/email/emailHtmlTemplates/otpEmailTemplate");
 const { sendMail } = require("../../services/email/emailSend");
 
 const handleResendOtp = async (req, res) => {
@@ -34,15 +36,15 @@ const handleResendOtp = async (req, res) => {
     const { html, text } = otpEmailTemplate(otp);
 
     let mailPayload = {
-      sender: `Markham College of commerce, Hazaribagh`,
+      sender: `Markham College of commerce Hazaribagh`,
       receiversEmail: email,
-      subject: `Your one time password (otp): ${otp}}`,
+      subject: `Your one time password (otp): ${otp}`,
       messageText: text,
       messageHtml: html,
     };
 
     // Sending Email
-    const { success: isEmailSend, info } = await sendMail(mailPayload);
+    const { success: isEmailSend } = await sendMail(mailPayload);
 
     // If Email is not send, Then Send Error
     if (!isEmailSend) {
