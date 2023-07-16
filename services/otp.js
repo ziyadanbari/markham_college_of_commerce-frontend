@@ -17,6 +17,11 @@ const setOtp = (userData) => {
   const otp = generateOTP(); // generate otp
   const sessionId = uuidv4(); // generate sessionId
 
+  //if NODE_ENV is not production then log opt in console
+  if (process.env.NODE_ENV !== "production") {
+    console.log(otp);
+  }
+
   // map option with userData, otp, otpExpireTime, attempt
   const userDataOption = {
     data: userData,

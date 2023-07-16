@@ -44,7 +44,7 @@ router.post(
 
 // ROUTER: POST /student/signin
 router.post(
-  "signin",
+  "/signin",
   [
     body("email").isEmail().withMessage("Please enter a valid email address"),
     body("password").isLength({ min: 8 }).withMessage("Invalid password"),
