@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const Student = require("../../model/student");
 const { createJwtToken } = require("../../auth/jwtToken");
+const bcrypt = require("bcrypt");
 
 const handleStudentSignIn = async (req, res) => {
   // Checking, Every Details is Valid or Not
@@ -24,17 +25,18 @@ const handleStudentSignIn = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "No account found with this email",
+        message: "Wrong Credentials",
       });
     }
 
-    console.log("password", password);
-    console.log("saved password", user.password);
+    // compare user's entered password store password
+    const isHashPasswordMatch = await bcrypt.compare(password, user.password);
+
     // if password is incorrect
-    if (user.password !== password) {
+    if (!isHashPasswordMatch) {
       return res.status(401).json({
         success: false,
-        message: "Password is incorrect",
+        message: "Wrong Credentials",
       });
     }
 
