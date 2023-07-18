@@ -1,5 +1,4 @@
 const express = require("express");
-const connectDB = require("./dbConnect");
 require("dotenv").config({ path: ".env.local" });
 const cors = require("cors");
 
@@ -12,6 +11,7 @@ app.use(cors());
 //Routes Import
 const studentRouter = require("./routes/student");
 const commonRouter = require("./routes/common");
+const { default: mongoose } = require("mongoose");
 
 app.use("/student", studentRouter);
 app.use("/", commonRouter);
@@ -28,24 +28,22 @@ app.get("*", (req, res) => {
 
 // Server Connection
 const PORT = process.env.PORT || 5000; // 5000 is the default port
-const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/MarkhamCollege"; // MarkhamCollege is the default database for local mongodb
+const MONGO_URI =
+  process.env.MONGO_URI || "mongodb://127.0.0.1:27017/MarkhamCollege"; // MarkhamCollege is the default database for local mongodb
 
-const startServer = async () => {
+const connectDB = async () => {
   try {
-    // Check NODE_ENV
-    if (process.env.NODE_ENV !== "production") {
-      console.log("NODE_ENV is not production");
-    }
-
-    await connectDB(MONGODB_URI);
-    console.log("mongodb connected");
-    app.listen(PORT, () => {
-      console.log(`Server is listening on port ${PORT}`);
-    });
+    const conn = await mongoose.connect(MONGO_URI);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.log(error);
+    console.log("Unable to connect mongodb", error);
+    process.exit(1);
   }
 };
 
-startServer();
+//Connect to the database before listening
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log("listening for requests PORT@", PORT);
+  });
+});
