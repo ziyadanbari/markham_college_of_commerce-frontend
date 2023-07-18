@@ -16,13 +16,13 @@ const { default: mongoose } = require("mongoose");
 app.use("/student", studentRouter);
 app.use("/", commonRouter);
 
-app.get("*", (req, res) => {
+// Middleware for handling unmatched routes
+app.use((req, res, next) => {
   res.status(404).send({
     success: false,
     error: 404,
-    method: "get",
-    message:
-      "Endpoint not found. If you think something broken then please contact the developer.",
+    method: req.method,
+    message: `Endpoint not found. If you think something broken then please contact the developer.`,
   });
 });
 
