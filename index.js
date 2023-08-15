@@ -2,6 +2,7 @@ const express = require("express");
 require("dotenv").config({ path: ".env.local" });
 const cors = require("cors");
 const connectDB = require("./dbConnect");
+const { checkEnv4Production, checkEnv4Development } = require("./checkEnvVar");
 const app = express();
 
 //Routes Import
@@ -11,8 +12,18 @@ const commonRouter = require("./routes/common");
 // Server Connection
 const PORT = process.env.PORT;
 const MONGO_URI = process.env.MONGO_URI;
+const NODE_ENV = process.env.NODE_ENV;
 
-console.log(`app is running in ${process.env.NODE_ENV} mode`);
+const checkRequiredEnv = () => {
+  if (NODE_ENV === "production") {
+    checkEnv4Production(); // Check for required env variables for production
+  } else {
+    checkEnv4Development(); // Check for required env variables for development
+  }
+  console.log(`App is running in ${NODE_ENV} mode`);
+};
+
+checkRequiredEnv();
 
 // Routes
 app.use("/student", studentRouter);
