@@ -9,8 +9,9 @@ const studentRouter = require("./routes/student");
 const commonRouter = require("./routes/common");
 
 // Server Connection
-const PORT = process.env.PORT;
-const MONGO_URI = process.env.MONGO_URI;
+const PORT = process.env.PORT || console.error("set PORT in .env file");
+const MONGO_URI =
+  process.env.MONGO_URI || console.error("set MONGO_URI in .env file");
 
 console.log(`app is running in ${process.env.NODE_ENV} mode`);
 
