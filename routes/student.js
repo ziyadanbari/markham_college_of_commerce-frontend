@@ -6,6 +6,10 @@ const {
   handleStudentSignupOtpVerify,
 } = require("../controller/student/signup");
 const { handleStudentSignIn } = require("../controller/student/sign");
+const {
+  handleStudentPasswordReset,
+  handlePasswordRecoveryOtpVerify,
+} = require("../controller/student/passwordReset");
 const router = express.Router();
 
 // ROUTER: POST /student/signup
@@ -52,5 +56,27 @@ router.post(
   handleStudentSignIn
 );
 
+// ROUTER: POST /student/password-recovery
+router.post(
+  "/password-recovery",
+  [body("email").isEmail().withMessage("Enter a valid Email")],
+  handleStudentPasswordReset
+);
+
+// ROUTER: POST /student/password-recovery-otp-verify
+router.post(
+  "/password-recovery-otp-verify",
+  [
+    // Validating otp and sessionId
+    body("otp")
+      .isLength({ max: 5 }, { min: 5 })
+      .withMessage("Please enter a valid OTP")
+      .isNumeric()
+      .withMessage("Please enter a valid OTP"),
+    body("password").isStrongPassword().withMessage("Enter a strong password"),
+    header("sessionId").notEmpty().withMessage("Session ID is required"),
+  ],
+  handlePasswordRecoveryOtpVerify
+);
 // Importing the router
 module.exports = router;
