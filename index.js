@@ -1,20 +1,26 @@
 const express = require("express");
 require("dotenv").config({ path: ".env.local" });
 const cors = require("cors");
-
+const connectDB = require("./dbConnect");
 const app = express();
-
-// Middleware
-app.use(express.json());
-app.use(cors());
 
 //Routes Import
 const studentRouter = require("./routes/student");
 const commonRouter = require("./routes/common");
-const { default: mongoose } = require("mongoose");
 
+// Server Connection
+const PORT = process.env.PORT;
+const MONGO_URI = process.env.MONGO_URI;
+
+console.log(`app is running in ${process.env.NODE_ENV} mode`);
+
+// Routes
 app.use("/student", studentRouter);
 app.use("/", commonRouter);
+
+// Middleware
+app.use(express.json());
+app.use(cors());
 
 // Middleware for handling unmatched routes
 app.use((req, res, next) => {
@@ -26,23 +32,8 @@ app.use((req, res, next) => {
   });
 });
 
-// Server Connection
-const PORT = process.env.PORT || 5000; // 5000 is the default port
-const MONGO_URI =
-  process.env.MONGO_URI || "mongodb://127.0.0.1:27017/MarkhamCollege"; // MarkhamCollege is the default database for local mongodb
-
-const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(MONGO_URI);
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.log("Unable to connect mongodb", error);
-    process.exit(1);
-  }
-};
-
 //Connect to the database before listening
-connectDB()
+connectDB(MONGO_URI)
   .then(() => {
     app.listen(PORT, () => {
       console.log("listening for requests PORT@", PORT);
