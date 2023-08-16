@@ -5,10 +5,6 @@ const connectDB = require("./dbConnect");
 const { checkEnv4Production, checkEnv4Development } = require("./checkEnvVar");
 const app = express();
 
-//Routes Import
-const studentRouter = require("./routes/student");
-const commonRouter = require("./routes/common");
-
 // Server Connection
 const PORT = process.env.PORT;
 const MONGO_URI = process.env.MONGO_URI;
@@ -25,13 +21,17 @@ const checkRequiredEnv = () => {
 
 checkRequiredEnv();
 
-// Routes
-app.use("/student", studentRouter);
-app.use("/", commonRouter);
-
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL?.split(","),
+  })
+);
+
+// Routes
+app.use("/student", require("./routes/student"));
+app.use("/", require("./routes/common"));
 
 // Middleware for handling unmatched routes
 app.use((req, res, next) => {

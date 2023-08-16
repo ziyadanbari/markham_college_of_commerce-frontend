@@ -17,4 +17,6 @@ router.post(
   handleResendOtp
 );
 
+router.use("/password-recovery", require("./passwordRecover"));
+
 module.exports = router;

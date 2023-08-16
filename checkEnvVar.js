@@ -7,6 +7,7 @@ const checkEnv4Production = () => {
     "JWT_PRIVATE_KEY",
     "SENDER_EMAIL_ID",
     "EMAIL_PASSWORD",
+    "CLIENT_URL",
   ];
 
   // filter missing environment variables
@@ -26,7 +27,13 @@ const checkEnv4Production = () => {
 };
 
 const checkEnv4Development = () => {
-  const requiredEnvVars = ["PORT", "MONGO_URI", "JWT_PRIVATE_KEY", "NODE_ENV"];
+  const requiredEnvVars = [
+    "PORT",
+    "MONGO_URI",
+    "JWT_PRIVATE_KEY",
+    "NODE_ENV",
+    "CLIENT_URL",
+  ];
 
   const missingEnvVars = requiredEnvVars.filter(
     (varName) => !process.env[varName]
