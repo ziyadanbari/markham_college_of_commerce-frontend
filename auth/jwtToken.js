@@ -3,9 +3,7 @@ require("dotenv").config();
 const jwtSecretKey = process.env.JWT_PRIVATE_KEY;
 
 const createJwtToken = (payload, expiresIn) => {
-  return jwt.sign(payload, jwtSecretKey, {
-    expiresIn: expiresIn ? expiresIn : null,
-  });
+  return jwt.sign(payload, jwtSecretKey, expiresIn ? { expiresIn } : {});
 };
 
 const verifyJwtToken = (token) => {
