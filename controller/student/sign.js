@@ -52,7 +52,7 @@ const handleStudentSignIn = async (req, res) => {
     res.status(200).send({
       success: true,
       message: "Login Successful",
-      authorization: token,
+      authorization: "Bearer " + token,
     });
   } catch (error) {
     res.status(500).json({

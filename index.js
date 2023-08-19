@@ -2,6 +2,7 @@ const express = require("express");
 require("dotenv").config({ path: ".env.local" });
 const cors = require("cors");
 const connectDB = require("./dbConnect");
+const path = require("path");
 const { checkEnv4Production, checkEnv4Development } = require("./checkEnvVar");
 const app = express();
 
@@ -28,7 +29,8 @@ app.use(
     origin: process.env.CLIENT_URL?.split(","),
   })
 );
-
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, "public")));
 // Routes
 app.use("/student", require("./routes/student"));
 app.use("/", require("./routes/common"));
