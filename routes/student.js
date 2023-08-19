@@ -6,6 +6,7 @@ const {
   handleStudentSignupOtpVerify,
 } = require("../controller/student/signup");
 const { handleStudentSignIn } = require("../controller/student/sign");
+const { verifyStudent } = require("../controller/student/verifyStudent");
 const router = express.Router();
 
 // ROUTER: POST /student/signup
@@ -50,6 +51,18 @@ router.post(
     body("password").isLength({ min: 8 }).withMessage("Invalid password"),
   ],
   handleStudentSignIn
+);
+
+router.get(
+  "/verifyStudent",
+  [
+    header("authorization")
+      .isLength({ min: 50 })
+      .withMessage("Invalid Authorization")
+      .notEmpty()
+      .withMessage("Authorization is required"),
+  ],
+  verifyStudent
 );
 
 // Importing the router

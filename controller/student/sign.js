@@ -41,12 +41,7 @@ const handleStudentSignIn = async (req, res) => {
     }
 
     // create jwt token
-    const token = createJwtToken({
-      id: user._id,
-      email: user.email,
-      name: user.firstName + " " + user.lastName,
-      role: "student",
-    });
+    const token = createJwtToken({ id: user._id });
 
     // Sending success response
     res.status(200).send({
