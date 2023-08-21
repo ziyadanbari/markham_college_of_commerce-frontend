@@ -125,7 +125,7 @@ const handleStudentSignupOtpVerify = async (req, res) => {
     await newStudent.save();
 
     // Creating a new jwt token
-    const jwtToken = createJwtToken({
+    const token = createJwtToken({
       id: newStudent._id,
       email: newStudent.email,
       name: newStudent.firstName + " " + newStudent.lastName,
@@ -136,7 +136,7 @@ const handleStudentSignupOtpVerify = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Student created successfully",
-      authorization: jwtToken,
+      authorization: "Bearer " + token,
     });
   } catch (error) {
     return res.status(500).json({
