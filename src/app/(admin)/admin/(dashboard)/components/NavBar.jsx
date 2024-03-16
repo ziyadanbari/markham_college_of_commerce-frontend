@@ -6,6 +6,7 @@ import {
   faSquarePen,
   faTable,
   faUniversity,
+  faCalendarDays,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -17,6 +18,11 @@ const NavBar = ({ isMenuOpen }) => {
       name: "DashBoard",
       icon: faTable,
       link: "/admin/dashboard",
+    },
+    {
+      name: "Events",
+      icon: faCalendarDays,
+      link: "/admin/events",
     },
     {
       name: "Received Application ",
@@ -55,9 +61,8 @@ const NavBar = ({ isMenuOpen }) => {
         {NAV_ITEMS.map((item, index) => (
           <li
             key={index}
-            className={`flex items-center gap-4 p-2 rounded-md hover:bg-blue-800 cursor-pointer font-medium duration-500 `}
-          >
-            <Link className="flex items-center gap-4" href={item.link}>
+            className={`flex items-center gap-4 p-2 rounded-md hover:bg-blue-800 cursor-pointer font-medium duration-500 `}>
+            <Link className="flex items-center gap-4 w-full" href={item.link}>
               <FontAwesomeIcon
                 className="text-xl font-light"
                 icon={item.icon}

@@ -9,13 +9,12 @@ import Image from "next/image";
 import AVATAR from "../user.png";
 import PropTypes from "prop-types";
 
-const Header = ({ setIsMenuOpen }) => {
+const Header = ({ setIsMenuOpen, adminData }) => {
   return (
     <header className="flex justify-between items-center bg-primary-regular text-white shadow-md">
       <div
         onClick={() => setIsMenuOpen((prevState) => !prevState)}
-        className="h-full flex items-center justify-center px-4 hover:bg-primary-dark cursor-pointer"
-      >
+        className="h-full flex items-center justify-center px-4 hover:bg-primary-dark cursor-pointer">
         <FontAwesomeIcon className="text-3xl" icon={faBars} />
       </div>
 
@@ -45,7 +44,9 @@ const Header = ({ setIsMenuOpen }) => {
             alt="User Avatar"
             className="rounded-full border-2 border-white"
           />
-          <span className="hidden sm:inline-block">Admin</span>
+          <span className="hidden sm:inline-block">
+            {adminData?.username || "Admin"}
+          </span>
         </div>
       </div>
     </header>
