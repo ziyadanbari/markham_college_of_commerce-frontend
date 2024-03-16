@@ -1,9 +1,13 @@
 const express = require("express");
-require("dotenv").config({ path: ".env.local" });
+require("dotenv").config({ path: ".env.example" });
+require("express-async-errors");
 const cors = require("cors");
 const connectDB = require("./dbConnect");
 const path = require("path");
 const { checkEnv4Production, checkEnv4Development } = require("./checkEnvVar");
+const apiErrorHandler = require("./utils/apiErrorHandler.js");
+const bodyParser = require("body-parser");
+const fileUpload = require("express-fileupload");
 const app = express();
 
 // Server Connection
@@ -23,7 +27,9 @@ const checkRequiredEnv = () => {
 checkRequiredEnv();
 
 // Middleware
-app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(fileUpload());
 app.use(
   cors({
     origin: process.env.CLIENT_URL?.split(","),
@@ -31,9 +37,12 @@ app.use(
 );
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 app.use("/student", require("./routes/student"));
 app.use("/", require("./routes/common"));
+app.use("/admin", require("./routes/admin.js"));
+app.use("/event", require("./routes/event.js"));
 
 // Middleware for handling unmatched routes
 app.use((req, res, next) => {
@@ -44,7 +53,7 @@ app.use((req, res, next) => {
     message: `Endpoint not found. If you think something broken then please contact the developer.`,
   });
 });
-
+app.use(apiErrorHandler);
 //Connect to the database before listening
 connectDB(MONGO_URI)
   .then(() => {
