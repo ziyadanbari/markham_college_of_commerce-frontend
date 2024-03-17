@@ -12,10 +12,14 @@ const eventSchema = new Schema(
       type: Date,
       required: true,
     },
-    eventPhoto: {
-      type: String,
-      required: true,
-    },
+    eventPhoto: [
+      {
+        photoUrl: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );

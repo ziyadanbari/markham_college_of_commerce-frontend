@@ -1,20 +1,24 @@
-const { writeFileSync } = require("fs");
 const Event = require("../../model/events.js");
 const crypto = require("crypto");
 async function addEvent(req, res) {
   try {
     const { eventName, eventDate } = req.body || {};
-    let { eventPhoto } = req.files || {};
-    if (eventPhoto) {
-      var randomName = `${crypto.randomBytes(10).toString("hex")}.png`;
-      const path = `${__dirname}/../../uploads/${randomName}`;
-      eventPhoto.mv(path);
-    }
-    await Event.create({
+    let photos = req.files["eventPhoto[]"] || {};
+    const event = new Event({
       eventName,
       eventDate,
-      eventPhoto: `${process.env.SERVER_URL}/uploads/${randomName}`,
     });
+    if (photos) {
+      photos.forEach((eventPhoto) => {
+        const randomName = `${crypto.randomBytes(10).toString("hex")}.png`;
+        const path = `${__dirname}/../../uploads/${randomName}`;
+        eventPhoto.mv(path);
+        event.eventPhoto.push({
+          photoUrl: `${process.env.SERVER_URL}/uploads/${randomName}`,
+        });
+      });
+    }
+    await event.save();
     const events = await Event.find({});
     res.status(200).json({ events });
   } catch (error) {
