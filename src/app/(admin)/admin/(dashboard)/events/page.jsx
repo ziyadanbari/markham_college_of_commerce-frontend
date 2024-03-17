@@ -45,7 +45,7 @@ export default function Events() {
       {showAddEventForm && (
         <div className="absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 bg-black/40 w-screen h-screen z-50">
           <div className="flex items-center justify-center w-full h-full">
-            <div>
+            <div className="sm:w-2/4 w-full px-10">
               <AddEventForm
                 setShowAddEventForm={setShowAddEventForm}
                 setEvents={setEvents}

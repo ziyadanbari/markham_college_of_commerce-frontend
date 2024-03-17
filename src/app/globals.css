@@ -1,3 +1,5 @@
+@import "~react-image-gallery/styles/css/image-gallery.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -66,4 +68,9 @@
   .animation-on-scroll:nth-child(12) {
     transition-delay: 2400ms;
   }
+}
+
+.image-gallery-svg {
+  width: 50px !important;
+  height: 50px !important;
 }

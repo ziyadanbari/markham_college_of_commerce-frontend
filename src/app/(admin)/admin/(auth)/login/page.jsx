@@ -2,8 +2,7 @@
 import axios from "axios";
 import { useRouter } from "next/navigation.js";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-
+import { useForm } from "react-hook-form"
 const AdminLogin = () => {
   const router = useRouter();
   const {
